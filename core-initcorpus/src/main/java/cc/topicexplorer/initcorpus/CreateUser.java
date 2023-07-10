@@ -51,10 +51,10 @@ public class CreateUser implements Command {
 		try {
 			Statement createUserStmt = crawlManagerConnection.createStatement();
 			for (String element : allowFrom) {
-				createUserStmt.executeUpdate("grant all privileges on " +  dbName + ".* to '" + dbUser + "'@'" + element + "' identified by '" + dbPassword + "';");
+			//	createUserStmt.executeUpdate("grant all privileges on " +  dbName + ".* to '" + dbUser + "'@'" + element + "' identified by '" + dbPassword + "';");
 			}
 			for (String element : allowFileFrom) {
-				createUserStmt.executeUpdate("grant file on *.* to '" + dbUser + "'@'" + element + "';");
+			//	createUserStmt.executeUpdate("grant file on *.* to '" + dbUser + "'@'" + element + "';");
 			}
 		} catch (SQLException e) {
 			logger.error("DB user " + dbUser + " could not be created.");
