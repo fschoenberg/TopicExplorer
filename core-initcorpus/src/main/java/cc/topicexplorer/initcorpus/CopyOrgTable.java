@@ -17,6 +17,7 @@ import cc.commandmanager.core.ResultState;
 
 import com.google.common.collect.Sets;
 
+
 public class CopyOrgTable implements Command {
 	private static final Logger logger = Logger.getLogger(CopyOrgTable.class);
 
@@ -46,11 +47,16 @@ public class CopyOrgTable implements Command {
 		Connection crawlManagerConnection = (Connection) context.get("CrawlManagmentConnection");
 
 		String dbName = properties.getProperty("database.DB");
+		String teIdentifier = properties.getProperty("database.TeIdentifier");
 		String searchStringId = properties.getProperty("database.SearchStringId");
 
 		// Construct the filter for the new corpus
 		String corpusFilter = "";
 		String topicExplorer_DefinitionIsPresent = "";
+
+		logger.info("Database is: " + dbName);
+		logger.info("teIdentifier is: " + teIdentifier);
+
 		try {
 
 			Statement checkStmt = crawlManagerConnection.createStatement();
@@ -67,19 +73,18 @@ public class CopyOrgTable implements Command {
 			logger.error("Can not check if TOPIC_EXPLORER_DEFINITION table is present.");
 			throw new RuntimeException(e);
 		}
-
+ 
 		if ("1".equals(topicExplorer_DefinitionIsPresent)) {
 			try {
-
 				Statement filterStmt = crawlManagerConnection.createStatement();
 				ResultSet resultSetOfFilter = filterStmt.executeQuery("select " + "  FILTER_START_DATETIME,"
 						+ "  FILTER_END_DATETIME," + "  FILTER_TEXT_SQL " + "from " + "  TOPIC_EXPLORER_DEFINITION "
-						+ "where" + "  TE_IDENTIFIER = '" + dbName + "';");
+						+ "where" + "  TE_IDENTIFIER = '" + teIdentifier + "';");
 				// using this filter in a query assumes that org_table_meta and
 				// org_table_text have been joined
 				logger.info("Construct corpus filter with statement:" + "select " + "  FILTER_START_DATETIME,"
 						+ "  FILTER_END_DATETIME," + "  FILTER_TEXT_SQL " + "from " + "  TOPIC_EXPLORER_DEFINITION "
-						+ "where" + "  TE_IDENTIFIER = '" + dbName + "';");
+						+ "where" + "  TE_IDENTIFIER = '" + teIdentifier + "';");
 				if (resultSetOfFilter.next()) {
 					corpusFilter = " " + " ( DOCUMENT_DATE BETWEEN " + "CAST('"
 							+ resultSetOfFilter.getString("FILTER_START_DATETIME") + "' AS DATETIME) AND " + "CAST('"

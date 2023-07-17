@@ -250,7 +250,7 @@ public class JsonServlet extends HttpServlet {
 							topicExplorer_DefinitionIsPresent = resultSetOfCheck.getString("IS_THERE");
 							logger.info("Test if TOPIC_EXPLORER_DEFINITION table is present, gave result: "
 									+ topicExplorer_DefinitionIsPresent);
-
+ 
 						}
 						resultSetOfCheck.close();
 						checkStmt.close();
@@ -260,8 +260,8 @@ public class JsonServlet extends HttpServlet {
 					}
 
 					if ("1".equals(topicExplorer_DefinitionIsPresent)) {
-						Properties dbProps2 = PropertiesUtil.loadMandatoryProperties("database", "");
-						String teIdentifier = dbProps2.getProperty("DB");
+						Properties properties = (Properties) context.get("properties");
+						String teIdentifier = properties.getProperty("database.TeIdentifier");
 						Integer topicExplorerId = -1;
 						try {
 							logger.info("insert zipped config with TE_IDENTIFIER: " + teIdentifier);
